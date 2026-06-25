@@ -118,6 +118,8 @@ public class Main {
                 case 4:
                     eliminarCategoria();
                     break;
+                case 0 : 
+                    break;
                 default : 
                     System.out.println("Opcion invalida");
                     System.out.println();
@@ -148,11 +150,14 @@ public class Main {
         listarCategorias();
         System.out.print("ID de categoria a editar: ");
         Long id = leerLong();
-        System.out.print("Nuevo nombre: ");
-        String nombre = scanner.nextLine().trim();
-        System.out.print("Nueva descripcion: ");
-        String desc = scanner.nextLine().trim();
         try {
+            Categoria c = categoriaService.buscarPorId(id);
+            System.out.print("Nuevo nombre [" + c.getNombre() + "]: ");
+            String nombre = scanner.nextLine().trim();
+            if (nombre.isEmpty()) nombre = c.getNombre();
+            System.out.print("Nueva descripcion [" + c.getDescripcion() + "]: ");
+            String desc = scanner.nextLine().trim();
+            if (desc.isEmpty()) desc = c.getDescripcion();
             categoriaService.editar(id, nombre, desc);
             System.out.println("Categoria actualizada.");
         } catch (Exception e) {
@@ -200,6 +205,8 @@ public class Main {
                     break;
                 case 4:
                     eliminarProducto();
+                    break;
+                case 0 : 
                     break;
                 default : 
                     System.out.println("Opcion invalida");
@@ -256,24 +263,32 @@ public class Main {
         listarProductos();
         System.out.print("ID de producto a editar: ");
         Long id = leerLong();
-        System.out.print("Nuevo nombre: ");
-        String nombre = scanner.nextLine().trim();
-        System.out.print("Nueva descripcion: ");
-        String desc = scanner.nextLine().trim();
-        System.out.print("Nuevo precio: ");
-        Double precio = leerDouble();
-        System.out.print("Nuevo stock: ");
-        int stock = leerEntero();
-        System.out.print("Nueva imagen: ");
-        String imagen = scanner.nextLine().trim();
-        System.out.print("Disponible? (s/n): ");
-        boolean disponible = scanner.nextLine().trim().equalsIgnoreCase("s");
-        System.out.println("Categorias disponibles:");
-        categoriaService.listar().forEach(c -> System.out.println(c.getId() + ". " + c.getNombre()));
-        System.out.print("ID de categoria: ");
-        Long catId = leerLong();
         try {
-            Categoria cat = categoriaService.buscarPorId(catId);
+            Producto p = productoService.buscarPorId(id);
+            System.out.print("Nuevo nombre [" + p.getNombre() + "]: ");
+            String nombre = scanner.nextLine().trim();
+            if (nombre.isEmpty()) nombre = p.getNombre();
+            System.out.print("Nueva descripcion [" + p.getDescripcion() + "]: ");
+            String desc = scanner.nextLine().trim();
+            if (desc.isEmpty()) desc = p.getDescripcion();
+            System.out.print("Nuevo precio [" + p.getPrecio() + "]: ");
+            String precioStr = scanner.nextLine().trim();
+            Double precio = precioStr.isEmpty() ? p.getPrecio() : Double.parseDouble(precioStr);
+            System.out.print("Nuevo stock [" + p.getStock() + "]: ");
+            String stockStr = scanner.nextLine().trim();
+            int stock = stockStr.isEmpty() ? p.getStock() : Integer.parseInt(stockStr);
+            System.out.print("Nueva imagen [" + p.getImagen() + "]: ");
+            String imagen = scanner.nextLine().trim();
+            if (imagen.isEmpty()) imagen = p.getImagen();
+            String dispActual = p.getDisponible() ? "s" : "n";
+            System.out.print("Disponible? (s/n) [" + dispActual + "]: ");
+            String dispStr = scanner.nextLine().trim();
+            boolean disponible = dispStr.isEmpty() ? p.getDisponible() : dispStr.equalsIgnoreCase("s");
+            System.out.println("Categorias disponibles:");
+            categoriaService.listar().forEach(c -> System.out.println(c.getId() + ". " + c.getNombre()));
+            System.out.print("ID de categoria [" + p.getCategoria().getId() + " - " + p.getCategoria().getNombre() + "]: ");
+            String catStr = scanner.nextLine().trim();
+            Categoria cat = catStr.isEmpty() ? p.getCategoria() : categoriaService.buscarPorId(Long.parseLong(catStr));
             productoService.editar(id, nombre, precio, desc, stock, imagen, disponible, cat);
             System.out.println("Producto actualizado.");
         } catch (Exception e) {
@@ -322,6 +337,8 @@ public class Main {
                 case 4:
                     eliminarUsuario();
                     break;
+                case 0 : 
+                    break;
                 default : 
                     System.out.println("Opcion invalida");
                     System.out.println();
@@ -368,21 +385,28 @@ public class Main {
         listarUsuarios();
         System.out.print("ID de usuario a editar: ");
         Long id = leerLong();
-        System.out.print("Nuevo nombre: ");
-        String nombre = scanner.nextLine().trim();
-        System.out.print("Nuevo apellido: ");
-        String apellido = scanner.nextLine().trim();
-        System.out.print("Nuevo mail: ");
-        String mail = scanner.nextLine().trim();
-        System.out.print("Nuevo celular: ");
-        String celular = scanner.nextLine().trim();
-        System.out.print("Nueva contraseña: ");
-        String pass = scanner.nextLine().trim();
-        System.out.println("Roles: 1. ADMIN  2. USUARIO");
-        System.out.print("Seleccione rol: ");
-        int r = leerEntero();
-        Rol rol = (r == 1) ? Rol.ADMIN : Rol.USUARIO;
         try {
+            Usuario u = usuarioService.buscarPorId(id);
+            System.out.print("Nuevo nombre [" + u.getNombre() + "]: ");
+            String nombre = scanner.nextLine().trim();
+            if (nombre.isEmpty()) nombre = u.getNombre();
+            System.out.print("Nuevo apellido [" + u.getApellido() + "]: ");
+            String apellido = scanner.nextLine().trim();
+            if (apellido.isEmpty()) apellido = u.getApellido();
+            System.out.print("Nuevo mail [" + u.getMail() + "]: ");
+            String mail = scanner.nextLine().trim();
+            if (mail.isEmpty()) mail = u.getMail();
+            System.out.print("Nuevo celular [" + u.getCelular() + "]: ");
+            String celular = scanner.nextLine().trim();
+            if (celular.isEmpty()) celular = u.getCelular();
+            System.out.print("Nueva contraseña (Enter para mantener la actual): ");
+            String pass = scanner.nextLine().trim();
+            if (pass.isEmpty()) pass = u.getContraseña();
+            String rolActual = u.getRol() == Rol.ADMIN ? "1" : "2";
+            System.out.println("Roles: 1. ADMIN  2. USUARIO");
+            System.out.print("Seleccione rol [" + rolActual + "]: ");
+            String rolStr = scanner.nextLine().trim();
+            Rol rol = rolStr.isEmpty() ? u.getRol() : (Integer.parseInt(rolStr) == 1 ? Rol.ADMIN : Rol.USUARIO);
             usuarioService.editar(id, nombre, apellido, mail, celular, pass, rol);
             System.out.println("Usuario actualizado.");
         } catch (Exception e) {
@@ -434,6 +458,8 @@ public class Main {
                     break;
                 case 5:
                     listarPedidosPorUsuario();
+                    break;
+                case 0 : 
                     break;
                 default : 
                     System.out.println("Opcion invalida");
