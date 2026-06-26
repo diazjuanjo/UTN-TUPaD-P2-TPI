@@ -21,3 +21,6 @@ El `main()` está en `src/integrado/prog2/Main.java`.
 javac -d build src/integrado/prog2/**/*.java
 java -cp build integrado.prog2.Main
 ```
+
+- **Documentación del proyecto**: \url{https://github.com/diazjuanjo/UTN-TUPaD-P2-TPI/blob/master/documentacion.pdf}
+- **Video explicativo**: \url{https://youtu.be/unHsFhyLIv0}
